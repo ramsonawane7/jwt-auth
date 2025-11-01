@@ -54,26 +54,31 @@ jobs:
       #  Update symlink, cleanup, and restart service
       - name: Update symlink and restart jwt service
         run: |
-          echo " Updating symlink and restarting jwt service..."
+          echo "🔄 Updating symlink and restarting jwt service..."
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             set -e
             cd /home/ubuntu/services/backend
-            # Find latest JAR
+
+            # Find latest JAR inside versions/jwt
             LATEST_JAR=$(ls -t versions/jwt/jwt-v1.*.jar | head -n 1)
             echo " Latest build: $LATEST_JAR"
-            # Update symlink
-            ln -sf "/home/ubuntu/services/backend/versions/jwt/$LATEST_JAR" /home/ubuntu/services/backend/symlink/jwt/jwt.jar
-            echo "Symlink updated to $LATEST_JAR"
-            # Keep only 5 latest JARs
+
+            # Update symlink correctly
+            ln -sf "/home/ubuntu/services/backend/$LATEST_JAR" /home/ubuntu/services/backend/symlink/jwt/jwt.jar
+            echo " Symlink updated to point at: $LATEST_JAR"
+
+            # Clean up old builds (keep 5 latest)
             echo " Cleaning old builds..."
-            ls -t versions/jwt-v1.*.jar | tail -n +6 | xargs -r rm -f
-            # Restart jwt service
-            echo " Restarting jwt service..."
+            ls -t versions/jwt/jwt-v1.*.jar | tail -n +6 | xargs -r rm -f
+
+            # Restart the service
+            echo " Restarting jwt.service..."
             sudo systemctl daemon-reload
             sudo systemctl enable jwt.service
             sudo systemctl restart jwt.service
-            # Show status
-            echo " Checking service status..."
+
+            echo " Checking status..."
             sudo systemctl status jwt.service --no-pager || true
-            echo " Deployment completed successfully for $LATEST_JAR"
+
+            echo " Deployment completed successfully for: $LATEST_JAR"
           EOF
