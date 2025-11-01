@@ -44,7 +44,7 @@ jobs:
       - name: Ensure backend folder exists
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} \
-          "mkdir -p /home/ubuntu/services/backend/versions /home/ubuntu/services/backend/symlink/jwt"
+          "mkdir -p /home/ubuntu/services/backend/versions/jwt /home/ubuntu/services/backend/symlink/jwt"
       #  Copy JAR to Ubuntu server
       - name: Upload JAR to server
         run: |
@@ -62,7 +62,7 @@ jobs:
             LATEST_JAR=$(ls -t versions/jwt/jwt-v1.*.jar | head -n 1)
             echo " Latest build: $LATEST_JAR"
             # Update symlink
-            ln -sf "/home/ubuntu/services/backend/$LATEST_JAR" /home/ubuntu/services/backend/symlink/jwt/jwt.jar
+            ln -sf "/home/ubuntu/services/backend/versions/jwt/$LATEST_JAR" /home/ubuntu/services/backend/symlink/jwt/jwt.jar
             echo "Symlink updated to $LATEST_JAR"
             # Keep only 5 latest JARs
             echo " Cleaning old builds..."
