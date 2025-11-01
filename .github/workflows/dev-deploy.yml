@@ -59,7 +59,7 @@ jobs:
             set -e
             cd /home/ubuntu/services/backend
             # Find latest JAR
-            LATEST_JAR=$(ls -t versions/jwt-v1.*.jar | head -n 1)
+            LATEST_JAR=$(ls -t versions/jwt/jwt-v1.*.jar | head -n 1)
             echo " Latest build: $LATEST_JAR"
             # Update symlink
             ln -sf "/home/ubuntu/services/backend/$LATEST_JAR" /home/ubuntu/services/backend/symlink/jwt/jwt.jar
