@@ -54,7 +54,7 @@ jobs:
       #  Update symlink, cleanup, and restart service
       - name: Update symlink and restart jwt service
         run: |
-          echo "🔄 Updating symlink and restarting jwt service..."
+          echo " Updating symlink and restarting jwt service..."
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             set -e
             cd /home/ubuntu/services/backend
